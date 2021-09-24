@@ -1,1 +1,65 @@
-"Hello world" 
+<html>
+
+<head>
+    <script>
+
+        var canvas,
+            c,
+            devicePixelRatio,
+            container, x, y, istouching;
+
+        function positionHandler(e) {
+            // stop scrolling etc
+            e.preventDefault();
+
+            if (e.targetTouches.length < 1) {
+                istouching = false;
+            }
+            else
+            {
+                istouching = true;
+                var t = e.targetTouches[0];
+                x = t.clientX;
+                y = t.clientY;
+            }
+        }
+
+        function init() {
+            istouching = 0;
+            container = document.getElementById('container');
+            container.className = "container";
+
+            var events = ['touchstart', 'touchmove', 'touchend', 'touchcancel'];
+            for (var i = 0, l = events.length; i < l; i++) {
+                container.addEventListener(events[i], positionHandler, false);
+            }
+            // suppress context menu
+            container.addEventListener('contextmenu', function (e) { e.preventDefault(); }, false)
+
+            setTimeout(updateTouch, 200);
+        }
+
+        function updateTouch()
+        {
+            document.getElementById('outputdiv').innerText = 'x: ' + x + '. y: ' + y + '. istouching: ' + istouching;
+            setTimeout(updateTouch, 200);
+        }
+
+        window.addEventListener('load', function () {
+            /* hack to prevent firing the init script before the window object's values are populated */
+            setTimeout(init, 100);
+        }, false);
+    </script>
+
+</head>
+
+<body>
+    <div id='outputdiv'>
+        output
+    </div>
+    <div id='container' style='background-color: grey;height:70%;width:100%'>
+        container
+    </div>
+</body>
+
+</html>
